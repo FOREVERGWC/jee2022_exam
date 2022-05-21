@@ -31,7 +31,6 @@ public class CharacterDaoImpl {
         if(id == f.getID()) {
           characterslist.add(c);
         }
-        System.out.println(f.toString());
       }
     }
     return result;

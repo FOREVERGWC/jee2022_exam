@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface FilmsDao extends JpaRepository<FilmsBean, Long> {
+  FilmsBean findFilmsBeanByID(String id);
 }
