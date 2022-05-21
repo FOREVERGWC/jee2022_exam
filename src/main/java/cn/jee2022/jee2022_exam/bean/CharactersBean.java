@@ -1,9 +1,6 @@
 package cn.jee2022.jee2022_exam.bean;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -14,6 +11,7 @@ import java.util.Set;
 @Getter
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
 public class CharactersBean {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,4 +25,19 @@ public class CharactersBean {
   @ToString.Exclude
   @ManyToMany(mappedBy = "filmsBean")
   private Set<FilmsBean> films = new HashSet<>();
+
+  public CharactersBean(String name, String province) {
+    this.name = name;
+    this.province = province;
+  }
+
+  public void setPerformanceCompany(PerformanceCompaniesBean performanceCompaniesBean) {
+    performanceCompaniesBean.getAuthors().add(this);
+    this.performanceCompaniesBean = performanceCompaniesBean;
+  }
+
+  public void removePerformanceCompany(PerformanceCompaniesBean performanceCompaniesBean) {
+    performanceCompaniesBean.getAuthors().remove(this);
+    this.performanceCompaniesBean = null;
+  }
 }

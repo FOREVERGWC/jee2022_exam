@@ -28,4 +28,20 @@ public class FilmsBean {
   @ToString.Exclude
   @ManyToMany(cascade = CascadeType.PERSIST)
   private Set<CharactersBean> characters = new HashSet<>();
+
+  public FilmsBean(String name, int year, String type) {
+    this.name = name;
+    this.year = year;
+    this.type = type;
+  }
+
+  public void addCharacter(CharactersBean character) {
+    character.getFilms().add(this);
+    characters.add(character);
+  }
+
+  public void removeCharacter(CharactersBean character) {
+    character.getFilms().remove(this);
+    characters.remove(character);
+  }
 }

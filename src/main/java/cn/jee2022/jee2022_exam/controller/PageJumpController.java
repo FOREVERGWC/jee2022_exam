@@ -9,4 +9,9 @@ public class PageJumpController {
   public String pageJumptoCharactersCreate() {
     return "CharactersCreate";
   }
+
+  @RequestMapping("/pageJumptoFilms")
+  public String pageJumptoFilms() {
+    return "Films";
+  }
 }
