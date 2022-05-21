@@ -8,5 +8,4 @@ public class Jee2022ExamApplication {
   public static void main(String[] args) {
     SpringApplication.run(Jee2022ExamApplication.class, args);
   }
-
 }
