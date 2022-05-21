@@ -29,8 +29,7 @@
         <td th:text="${film.name}"></td>
         <td th:text="${film.year}"></td>
         <td th:text="${film.type}"></td>
-        <td><a th:href="@{/charactersShow(id=${film.ID})}">参演演员</a>   <a href="">添加演员</a></td>
-<!--        <td><a th:href="@{/charactersShow(id=${film.ID})}>参演演员</a>   <a href="">添加演员</a></td>-->
+        <td><a th:href="@{/charactersShow(id=${film.ID})}">参演演员</a>   <a th:href="@{/pageJumptoCharactersCreate(companyId=${film.ID})}">添加演员</a></td>
       </tr>
     </tbody>
   </table>
