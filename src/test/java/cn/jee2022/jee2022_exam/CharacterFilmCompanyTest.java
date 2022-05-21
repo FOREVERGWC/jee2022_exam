@@ -24,9 +24,9 @@ public class CharacterFilmCompanyTest {
   void init() {
     PerformanceCompaniesBean aPublisher = new PerformanceCompaniesBean("制片厂A", "地址A", "Logo A");
 
-    CharactersBean aaAuthor = new CharactersBean("演员a-a", "省份A");
-    CharactersBean abAuthor = new CharactersBean("演员a-b", "省份B");
-    CharactersBean acAuthor = new CharactersBean("演员a-c", "省份C");
+    CharactersBean aaAuthor = new CharactersBean("演员A", "省份A");
+    CharactersBean abAuthor = new CharactersBean("演员B", "省份B");
+    CharactersBean acAuthor = new CharactersBean("演员C", "省份C");
 
     aaAuthor.setPerformanceCompaniesBean(aPublisher);
     abAuthor.setPerformanceCompaniesBean(aPublisher);
@@ -42,7 +42,7 @@ public class CharacterFilmCompanyTest {
 
     PerformanceCompaniesBean bPublisher = new PerformanceCompaniesBean("制片厂B", "地址B", "Logo B");
 
-    CharactersBean bdAuthor = new CharactersBean("演员b-d", "省份D");
+    CharactersBean bdAuthor = new CharactersBean("演员D", "省份D");
 
     bdAuthor.setPerformanceCompany(bPublisher);
 
