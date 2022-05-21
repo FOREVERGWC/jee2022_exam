@@ -1,9 +1,6 @@
 package cn.jee2022.jee2022_exam.bean;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -14,6 +11,7 @@ import java.util.Set;
 @Getter
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
 public class FilmsBean {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

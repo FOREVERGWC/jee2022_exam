@@ -8,13 +8,14 @@
 
   <body>
     <a href="/pageJumptoIndex">首页</a>
-    <a href="/pageJumptoFilms">电影列表</a>
-    <a href="/pageJumptoCharactersCreate">添加演员</a>
-    <a href="/file/input">上传图标</a>
+<!--    <a href="/pageJumptoFilms">电影列表</a>-->
+<!--    <a href="/pageJumptoCharactersCreate">添加演员</a>-->
+<!--    <a href="/file/input">上传图标</a>-->
     <div>添加演员</div>
     <form action="/charactersCreate">
       <div>姓名：<input type="text" placeholder="请输入姓名" required="required" name="name"></div>
       <div>籍贯：<input type="text" placeholder="请输入省份" required="required" name="province"></div>
+      <div>公司：<input type="text" th:value="${companyId}" name="companyId"></div>
       <span th:text="${result}" th:if="${result}"></span>
       <div><input type="submit"></div>
     </form>

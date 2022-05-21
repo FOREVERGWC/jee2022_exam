@@ -8,21 +8,30 @@
 
   <body>
   <a href="/pageJumptoIndex">首页</a>
-  <a href="/pageJumptoFilms">电影列表</a>
-  <a href="/pageJumptoCharactersCreate">添加演员</a>
-  <a href="/file/input">上传图标</a>
-  <table>
+<!--  <a href="/pageJumptoFilms">电影列表</a>-->
+<!--  <a href="/pageJumptoCharactersCreate">添加演员</a>-->
+<!--  <a href="/file/input">上传图标</a>-->
+  <table border="2">
     <thead>
       <tr>
         <th>编号</th>
         <th>名字</th>
         <th>上映年份</th>
         <th>类型</th>
+        <th>操作</th>
       </tr>
     </thead>
     <tfoot>
     </tfoot>
     <tbody>
+      <tr th:each="film:${films}">
+        <td th:text="${film.ID}"></td>
+        <td th:text="${film.name}"></td>
+        <td th:text="${film.year}"></td>
+        <td th:text="${film.type}"></td>
+        <td><a th:href="@{/charactersShow(id=${film.ID})}">参演演员</a>   <a href="">添加演员</a></td>
+<!--        <td><a th:href="@{/charactersShow(id=${film.ID})}>参演演员</a>   <a href="">添加演员</a></td>-->
+      </tr>
     </tbody>
   </table>
   </body>

@@ -22,7 +22,7 @@ public class PerformanceCompaniesBean {
 
   @ToString.Exclude
   @OneToMany(mappedBy = "performanceCompaniesBean")
-  private Set<CharactersBean> authors = new HashSet<>();
+  private Set<CharactersBean> characters = new HashSet<>();
 
   public PerformanceCompaniesBean(String name, String address, String logo) {
     this.name = name;

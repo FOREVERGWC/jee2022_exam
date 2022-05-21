@@ -16,8 +16,8 @@ public class CharactersCreate {
   CharacterDaoImpl characterDaoImpl;
 
   @RequestMapping("/charactersCreate")
-  public String charactersCreate(String name, String province, Map model) {
-    CharactersBean character = new CharactersBean(name, province);
+  public String charactersCreate(String name, String province, String companyId, Map model) {
+    CharactersBean character = new CharactersBean(name, province, Integer.valueOf(companyId));
     boolean flag = characterDaoImpl.charactersCreate(character);
 
     if(flag) {

@@ -18,6 +18,7 @@ public class CharactersBean {
   private int ID;
   private String name;
   private String province;
+  private int CompanyId;
 
   @ManyToOne(cascade = CascadeType.PERSIST)
   private PerformanceCompaniesBean performanceCompaniesBean;
@@ -26,18 +27,25 @@ public class CharactersBean {
   @ManyToMany(mappedBy = "filmsBean")
   private Set<FilmsBean> films = new HashSet<>();
 
-  public CharactersBean(String name, String province) {
+  public CharactersBean(String name, String province, int CompanyId) {
     this.name = name;
     this.province = province;
+    this.CompanyId = CompanyId;
+  }
+
+  public CharactersBean(String name, String province, PerformanceCompaniesBean performanceCompaniesBean) {
+    this.name = name;
+    this.province = province;
+    this.CompanyId = performanceCompaniesBean.getID();
   }
 
   public void setPerformanceCompany(PerformanceCompaniesBean performanceCompaniesBean) {
-    performanceCompaniesBean.getAuthors().add(this);
+    performanceCompaniesBean.getCharacters().add(this);
     this.performanceCompaniesBean = performanceCompaniesBean;
   }
 
   public void removePerformanceCompany(PerformanceCompaniesBean performanceCompaniesBean) {
-    performanceCompaniesBean.getAuthors().remove(this);
+    performanceCompaniesBean.getCharacters().remove(this);
     this.performanceCompaniesBean = null;
   }
 }

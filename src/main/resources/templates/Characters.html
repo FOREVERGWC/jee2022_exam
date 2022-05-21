@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>演员名单</title>
+  </head>
+
+  <body>
+    <a href="/pageJumptoIndex">首页</a>
+    <table border="2">
+      <thead>
+      <tr>
+        <th>编号</th>
+        <th>名字</th>
+        <th>省份</th>
+      </tr>
+      </thead>
+      <tfoot>
+      <tr><td colspan="8">共计 <a th:text="${characters.size}"></a> 条数据</td></tr>
+      </tfoot>
+      <tbody>
+        <tr th:each="character:${characters}">
+          <td th:text="${character.ID}"></td>
+          <td th:text="${character.name}"></td>
+          <td th:text="${character.province}"></td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

@@ -30,7 +30,8 @@
           <td th:text="${companies.name}"></td>
           <td th:text="${companies.address}"></td>
           <td th:text="${companies.logo}"></td>
-          <td><a href="#">电影列表</a><a href="#">新增演员</a><a href="#">上传图标</a></td>
+
+          <td><a th:href="@{/pageJumptoFilms(id=${companies.ID})}">电影列表</a>   <a th:href="@{/pageJumptoCharactersCreate(companyId=${companies.ID})}">新增演员</a>   <a href="/file/input">上传图标</a></td>
         </tr>
       </tbody>
     </table>
