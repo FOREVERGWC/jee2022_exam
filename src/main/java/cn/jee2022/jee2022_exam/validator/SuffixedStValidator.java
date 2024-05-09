@@ -1,7 +1,7 @@
 package cn.jee2022.jee2022_exam.validator;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 import java.lang.annotation.Annotation;
 
 public class SuffixedStValidator implements ConstraintValidator<SuffixedStValidator, String>, Annotation {

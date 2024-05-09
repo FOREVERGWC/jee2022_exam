@@ -1,6 +1,6 @@
 plugins {
-  id 'org.springframework.boot' version '2.6.4'
-  id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+  id 'org.springframework.boot' version '3.0.3'
+  id 'io.spring.dependency-management' version '1.1.0'
   id 'java'
   id 'war'
 }
@@ -16,26 +16,25 @@ configurations {
 }
 
 repositories {
+  maven { url 'https://maven.aliyun.com/repository/public/' }
+  maven { url 'https://maven.aliyun.com/repository/spring/' }
   mavenCentral()
 }
 
 dependencies {
   implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
   implementation 'org.springframework.boot:spring-boot-starter-web'
-  compileOnly 'org.projectlombok:lombok'
+  implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+  implementation 'org.springframework.boot:spring-boot-starter-validation'
+  implementation 'org.springframework.boot:spring-boot-devtools'
+  implementation 'cn.hutool:hutool-all:5.8.27'
   annotationProcessor 'org.projectlombok:lombok'
+  compileOnly 'org.projectlombok:lombok'
   providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
-  testImplementation 'org.springframework.boot:spring-boot-starter-test'
-  implementation 'org.springframework.boot:spring-boot-starter-jdbc'
-
   runtimeOnly 'org.hsqldb:hsqldb'
-
+  testImplementation 'org.springframework.boot:spring-boot-starter-test'
   testCompileOnly 'org.projectlombok:lombok'
   testAnnotationProcessor 'org.projectlombok:lombok'
-  implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-
-  implementation('org.springframework.boot:spring-boot-starter-validation')
-  implementation 'com.sun.activation:javax.activation:1.2.0'
 }
 
 tasks.named('test') {

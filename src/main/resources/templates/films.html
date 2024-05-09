@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>电影列表</title>
+  <link rel="stylesheet" th:href="@{/js/lib-master/theme-chalk/index.css}">
+</head>
+<body>
+<div id="app">
+  <el-row :gutter="20">
+    <el-col :span="4">
+      <el-input v-model="queryForm.id" clearable placeholder="电影编号"></el-input>
+    </el-col>
+    <el-col :span="4">
+      <el-select v-model="queryForm.companyId" clearable placeholder="公司" style="width: 100%">
+        <el-option v-for="item in companyList" :key="item.id" :label="item.name"
+                   :value="item.id"></el-option>
+      </el-select>
+    </el-col>
+    <el-col :span="4">
+      <el-input v-model="queryForm.name" clearable placeholder="名字"></el-input>
+    </el-col>
+    <el-col :span="4">
+      <el-input v-model="queryForm.year" clearable placeholder="上映年份"></el-input>
+    </el-col>
+    <el-col :span="4">
+      <el-input v-model="queryForm.type" clearable placeholder="类型"></el-input>
+    </el-col>
+    <el-col :span="4">
+      <el-button @click="getFilmList">查询</el-button>
+      <el-button type="primary" @click="showAdd">添加</el-button>
+    </el-col>
+  </el-row>
+  <el-table :data="filmList" current-row-key="id" highlight-current-row size="small" stripe>
+    <el-table-column align="center" label="电影编号" prop="id"></el-table-column>
+    <el-table-column align="center" label="名字" prop="name"></el-table-column>
+    <el-table-column align="center" label="公司" prop="company.name">
+      <template v-slot="scope">
+        <el-link :href="`/companies?id=${scope.row.company.id}`" :underline="false" target="_self" type="primary">
+          {{ scope.row.company.name }}
+        </el-link>
+      </template>
+    </el-table-column>
+    <el-table-column align="center" label="上映年份" prop="year"></el-table-column>
+    <el-table-column align="center" label="类型" prop="type"></el-table-column>
+    <el-table-column align="center" label="演员">
+      <template v-slot="scope">
+        <el-tree :data="scope.row.performers" :props="defaultProps"></el-tree>
+      </template>
+    </el-table-column>
+    <el-table-column align="center" label="操作">
+      <template v-slot="scope">
+        <el-button size="mini" type="primary" @click="showEdit(scope.row.id)">编辑</el-button>
+        <el-popconfirm :title="'是否删除ID为' + scope.row.id + '的数据项？'" @confirm="handleDelete(scope.row.id)">
+          <el-button slot="reference" size="mini" type="danger">删除</el-button>
+        </el-popconfirm>
+      </template>
+    </el-table-column>
+  </el-table>
+  <el-dialog :title="addOrEditForm.title" :visible.sync="addOrEditForm.visible">
+    <el-form ref="addOrEditRef" :model="addOrEditForm.data" :rules="addOrEditRules" label-position="right"
+             label-width="80px">
+      <el-form-item label="名字" prop="name">
+        <el-input v-model="addOrEditForm.data.name" placeholder="请输入名字"></el-input>
+      </el-form-item>
+      <el-form-item label="公司" prop="companyId">
+        <el-select v-model="addOrEditForm.data.companyId" clearable placeholder="请选择公司" style="width: 100%"
+                   @change="handleChange">
+          <el-option v-for="item in companyList" :key="item.id" :label="item.name"
+                     :value="item.id"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="上映年份" prop="year">
+        <el-input v-model="addOrEditForm.data.year" placeholder="请输入上映年份"></el-input>
+      </el-form-item>
+      <el-form-item label="类型" prop="type">
+        <el-input v-model="addOrEditForm.data.type" placeholder="请输入类型"></el-input>
+      </el-form-item>
+      <el-form-item label="参演演员" prop="performerIds">
+        <el-select v-model="addOrEditForm.data.performerIds" clearable multiple placeholder="请选择参演演员"
+                   style="width: 100%">
+          <el-option v-for="item in performerList" :key="item.id" :label="item.name"
+                     :value="item.id"></el-option>
+        </el-select>
+      </el-form-item>
+    </el-form>
+    <div slot="footer" class="dialog-footer">
+      <el-button @click="addOrEditForm.visible = false">取消</el-button>
+      <el-button type="primary" @click="handleSubmit">确定</el-button>
+    </div>
+  </el-dialog>
+</div>
+</body>
+<script th:src="@{js/vue.min.js}"></script>
+<script th:src="@{js/lib-master/index.js}"></script>
+<script th:src="@{js/axios.min.js}"></script>
+<script th:inline="javascript">
+  const vue = new Vue({
+    el: '#app',
+    data() {
+      return {
+        queryForm: {
+          pageNo: 1,
+          pageSize: 10,
+          id: null,
+          name: '',
+          year: null,
+          type: '',
+          companyId: [[${companyId}]] || null
+        },
+        addOrEditForm: {
+          title: '',
+          visible: false,
+          data: {
+            id: null,
+            name: '',
+            companyId: null,
+            year: null,
+            type: '',
+            performerIds: []
+          }
+        },
+        addOrEditRules: {
+          name: [{required: true, message: '名字为必填项', trigger: 'blur'}],
+          companyId: [{required: true, message: '公司为必填项', trigger: 'blur'}],
+          year: [{required: true, message: '上映年份为必填项', trigger: 'blur'}],
+          type: [{required: true, message: '类型为必填项', trigger: 'blur'}]
+        },
+        companyList: [],
+        performerList: [],
+        filmList: [],
+        fileList: [],
+        total: 0,
+        defaultProps: {
+          children: 'children',
+          label: 'name'
+        }
+      }
+    },
+    created() {
+      this.getCompanyList()
+      this.getFilmList()
+    },
+    methods: {
+      getCompanyList() {
+        axios({
+          url: '/company',
+          method: 'get',
+          params: {pageNo: 1, pageSize: 100}
+        }).then(res => {
+          if (res.status === 200 && res.data.code === 200) {
+            this.companyList = res.data.data.page.content
+          }
+        })
+      },
+      getPerformerList() {
+        axios({
+          url: '/performer',
+          method: 'get',
+          params: {pageNo: 1, pageSize: 100, companyId: this.addOrEditForm.data.companyId}
+        }).then(res => {
+          if (res.status === 200 && res.data.code === 200) {
+            this.performerList = res.data.data.page.content
+          }
+        })
+      },
+      getFilmList() {
+        axios({
+          url: '/film',
+          method: 'get',
+          params: this.queryForm
+        }).then(res => {
+          if (res.status === 200 && res.data.code === 200) {
+            this.filmList = res.data.data.page.content
+            this.total = res.data.data.page.totalElements
+          }
+        })
+      },
+      getFilm(id) {
+        axios({
+          url: `/film/${id}`,
+          method: 'get'
+        }).then(res => {
+          if (res.status === 200 && res.data.code === 200) {
+            this.addOrEditForm.data = {
+              ...res.data.data.film,
+              companyId: res.data.data.film.company.id,
+              performerIds: res.data.data.film.performers.map(item => item.id)
+            }
+            this.getPerformerList()
+          }
+        })
+      },
+      showAdd() {
+        this.addOrEditForm.visible = true
+        this.addOrEditForm.title = '添加电影'
+        this.$nextTick(() => {
+          this.$refs.addOrEditRef.resetFields()
+        })
+      },
+      showEdit(id) {
+        this.addOrEditForm.visible = true
+        this.addOrEditForm.title = '编辑电影'
+        this.$nextTick(() => {
+          this.$refs.addOrEditRef.resetFields()
+        })
+        this.getFilm(id)
+      },
+      handleSubmit() {
+        this.$refs.addOrEditRef.validate(valid => {
+          if (!valid) return
+          axios({
+            url: '/film',
+            method: 'post',
+            data: this.addOrEditForm.data
+          }).then(res => {
+            if (res.status === 200 && res.data.code === 200) {
+              this.$message.success(res.data.msg)
+              this.addOrEditForm.visible = false
+            } else {
+              this.$message.error(res.data.msg)
+            }
+            this.getFilmList()
+          })
+        })
+      },
+      handleDelete(id) {
+        axios({
+          url: '/film',
+          method: 'delete',
+          params: {ids: id}
+        }).then(res => {
+          if (res.status === 200 && res.data.code === 200) {
+            this.$message.success(res.data.msg)
+          } else {
+            this.$message.error(res.data.msg)
+          }
+          this.getFilmList()
+        })
+      },
+      handleUploadSuccess(res, file) {
+        this.addOrEditForm.data.cover = res.data.path
+        this.addOrEditForm.data.img = URL.createObjectURL(file.raw)
+      },
+      handleChange() {
+        this.getPerformerList()
+        this.addOrEditForm.data.performerIds.length = 0
+      }
+    }
+  })
+</script>
+<style>
+  .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+  }
+
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
+  }
+</style>
+</html>

@@ -1,5 +1,5 @@
-﻿1.charactersBean(ID、姓名、省份)//演员
-2.performanceCompaniesBean(ID、名字、地址、logo)//演艺公司
-3.filmsBean(名字、年份、类型)//电影
+﻿1.performer(id、姓名、省份)//演员
+2.company(id、名字、地址、logo)//演艺公司
+3.film(id、名字、年份、类型)//电影
 1 -> 3 = N : M
 2 -> 1 = 1 : N
